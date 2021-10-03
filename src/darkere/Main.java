@@ -8,8 +8,22 @@ public class Main {
     private static final int field_218292_j = NUM_Y_BITS;
     private static final int field_218293_k = NUM_Y_BITS + NUM_Z_BITS;
 
+    private static final long X_MASK = (1L << NUM_X_BITS) - 1L;
+    private static final long Y_MASK = (1L << NUM_Y_BITS) - 1L;
+    private static final long Z_MASK = (1L << NUM_Z_BITS) - 1L;
+    private static final int INVERSE_START_BITS_Z = NUM_Y_BITS;
+    private static final int INVERSE_START_BITS_X = NUM_Y_BITS + NUM_Z_BITS;
+    static int x,y,z;
+
     public static void main(String[] args) {
-        fromLong(Long.parseLong(args[0]));
+        if(args.length < 3)
+            fromLong(Long.parseLong(args[0]));
+        else {
+            x = Integer.parseInt(args[0]);
+            y = Integer.parseInt(args[1]);
+            z = Integer.parseInt(args[2]);
+            System.out.println(toLong());
+        }
     }
     public static int unpackX(long p_218290_0_) {
         return (int)(p_218290_0_ << 64 - field_218293_k - NUM_X_BITS >> 64 - NUM_X_BITS);
@@ -21,6 +35,16 @@ public class Main {
 
     public static int unpackZ(long p_218282_0_) {
         return (int)(p_218282_0_ << 64 - field_218292_j - NUM_Z_BITS >> 64 - NUM_Z_BITS);
+    }
+    public static long toLong() {
+        return pack(x, y, z);
+    }
+
+    public static long pack(int x, int y, int z) {
+        long i = 0L;
+        i = i | ((long)x & X_MASK) << INVERSE_START_BITS_X;
+        i = i | ((long)y & Y_MASK) << 0;
+        return i | ((long)z & Z_MASK) << INVERSE_START_BITS_Z;
     }
 
     public static void fromLong(long x) {
